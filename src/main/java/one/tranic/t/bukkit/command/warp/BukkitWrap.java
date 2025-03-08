@@ -18,16 +18,21 @@ import org.jetbrains.annotations.NotNull;
  * The class uses a {@link BukkitSource} to represent and execute commands with the
  * associated {@link CommandSender}.
  */
+@SuppressWarnings({"unused", "unchecked"})
 public class BukkitWrap extends Command {
     private final SimpleCommand<BukkitSource> command;
 
-    public BukkitWrap(SimpleCommand<BukkitSource> command) {
+    public BukkitWrap(SimpleCommand<? extends BukkitSource> command) {
         super(command.getName());
         if (command.getPermission() != null) setPermission(command.getPermission());
         if (command.getDescription() != null) setDescription(command.getDescription());
         if (command.getUsage() != null) setUsage(command.getUsage());
 
-        this.command = command;
+        this.command = (SimpleCommand<BukkitSource>) command;
+    }
+
+    public static BukkitWrap wrap(SimpleCommand<? extends BukkitSource> command) {
+        return new BukkitWrap(command);
     }
 
     @Override
