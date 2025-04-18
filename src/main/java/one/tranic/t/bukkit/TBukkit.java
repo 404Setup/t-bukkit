@@ -17,6 +17,7 @@ import java.util.UUID;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+@SuppressWarnings("unused")
 public class TBukkit {
     private static boolean initialized = false;
     private static BukkitAudiences adventure;
