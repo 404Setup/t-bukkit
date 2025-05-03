@@ -33,12 +33,12 @@ public class TBukkit {
         if (initialized) return;
         adventure = BukkitAudiences.create(plugin);
         try {
-            Reflect.assignToStaticFieldIfUninitialized(TBase.class, "getConsoleSourceSupplier", (Supplier<CommandSource<?, ?>>) TBukkit::getBukkitConsoleSource, false);
-            Reflect.assignToStaticFieldIfUninitialized(Players.class, "getPlayerWithStringMethod", (Function<String, Player<?>>) BukkitPlayers::getPlayer, false);
-            Reflect.assignToStaticFieldIfUninitialized(Players.class, "getPlayerWithUUIDMethod", (Function<UUID, Player<?>>) BukkitPlayers::getPlayer, false);
-            Reflect.assignToStaticFieldIfUninitialized(Players.class, "getOnlinePlayersMethod", (Supplier<List<Player<?>>>) BukkitPlayers::getOnlinePlayers, false);
-            Reflect.assignToStaticFieldIfUninitialized(Players.class, "getPlatformOnlinePlayersMethod", (Supplier<List<?>>) BukkitPlayers::getPlatformOnlinePlayers, false);
-            Reflect.assignToStaticFieldIfUninitialized(Players.class, "getOnlinePlayersNameMethod", (Supplier<List<String>>) BukkitPlayers::getOnlinePlayersName, false);
+            Reflect.assignToStaticFieldIfUninitialized(TBase.class, "getConsoleSourceSupplier", (Supplier<CommandSource<?, ?>>) TBukkit::getBukkitConsoleSource);
+            Reflect.assignToStaticFieldIfUninitialized(Players.class, "getPlayerWithStringMethod", (Function<String, Player<?>>) BukkitPlayers::getPlayer);
+            Reflect.assignToStaticFieldIfUninitialized(Players.class, "getPlayerWithUUIDMethod", (Function<UUID, Player<?>>) BukkitPlayers::getPlayer);
+            Reflect.assignToStaticFieldIfUninitialized(Players.class, "getOnlinePlayersMethod", (Supplier<List<Player<?>>>) BukkitPlayers::getOnlinePlayers);
+            Reflect.assignToStaticFieldIfUninitialized(Players.class, "getPlatformOnlinePlayersMethod", (Supplier<List<?>>) BukkitPlayers::getPlatformOnlinePlayers);
+            Reflect.assignToStaticFieldIfUninitialized(Players.class, "getOnlinePlayersNameMethod", (Supplier<List<String>>) BukkitPlayers::getOnlinePlayersName);
         } catch (Exception e) {
             e.printStackTrace();
             return;
