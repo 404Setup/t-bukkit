@@ -6,7 +6,6 @@ import net.kyori.adventure.title.Title;
 import one.tranic.t.base.TBase;
 import one.tranic.t.base.command.Operator;
 import one.tranic.t.base.command.source.CommandSource;
-import one.tranic.t.base.message.Message;
 import one.tranic.t.bukkit.TBukkit;
 import one.tranic.t.bukkit.player.BukkitPlayer;
 import org.bukkit.command.CommandSender;
@@ -71,7 +70,7 @@ public class BukkitSource implements CommandSource<CommandSender, Player> {
 
     @Override
     public void sendMessage(@NotNull Component message) {
-        commandSender.sendMessage(Message.toString(message));
+        commandSender.sendMessage(net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer.legacySection().serialize(message));
     }
 
     @Override

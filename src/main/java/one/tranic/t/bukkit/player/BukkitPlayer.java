@@ -1,7 +1,6 @@
 package one.tranic.t.bukkit.player;
 
 import net.kyori.adventure.text.Component;
-import one.tranic.t.base.message.Message;
 import one.tranic.t.base.player.BedrockPlayer;
 import one.tranic.t.base.player.Location;
 import org.bukkit.Bukkit;
@@ -127,7 +126,7 @@ public class BukkitPlayer implements one.tranic.t.base.player.Player<Player> {
 
     @Override
     public boolean kick(@NotNull Component reason) {
-        player.kickPlayer(Message.toString(reason));
+        player.kickPlayer(net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer.legacySection().serialize(reason));
         return true;
     }
 
@@ -138,6 +137,6 @@ public class BukkitPlayer implements one.tranic.t.base.player.Player<Player> {
 
     @Override
     public void sendMessage(@NotNull Component message) {
-        player.sendMessage(Message.toString(message));
+        player.sendMessage(net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer.legacySection().serialize(message));
     }
 }

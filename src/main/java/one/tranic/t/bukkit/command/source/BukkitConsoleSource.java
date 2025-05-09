@@ -2,7 +2,6 @@ package one.tranic.t.bukkit.command.source;
 
 import net.kyori.adventure.text.Component;
 import one.tranic.t.base.command.source.SystemCommandSource;
-import one.tranic.t.base.message.Message;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -14,7 +13,7 @@ public class BukkitConsoleSource extends SystemCommandSource<CommandSender, Play
 
     @Override
     public void broadcastMessage(@NotNull Component message) {
-        Bukkit.broadcastMessage(Message.toString(message));
+        Bukkit.broadcastMessage(net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer.legacySection().serialize(message));
     }
 
     @Override
@@ -34,6 +33,6 @@ public class BukkitConsoleSource extends SystemCommandSource<CommandSender, Play
 
     @Override
     public void sendMessage(@NotNull Component message) {
-        Bukkit.getConsoleSender().sendMessage(Message.toString(message));
+        Bukkit.getConsoleSender().sendMessage(net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer.legacySection().serialize(message));
     }
 }
