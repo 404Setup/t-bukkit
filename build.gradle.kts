@@ -9,7 +9,7 @@ plugins {
 }
 
 group = "one.tranic"
-version = "1.0.4"
+version = "1.0.5"
 
 repositories {
     mavenCentral()
@@ -30,7 +30,7 @@ dependencies {
 
     compileOnly("com.viaversion:viaversion-api:5.2.2-SNAPSHOT")
 
-    implementation("one.tranic:t-base:1.2.9")
+    implementation("one.tranic:t-base:1.3.2")
     implementation("one.tranic:t-utils:1.3.0")
     implementation("net.kyori:adventure-api:4.21.0")
     implementation("net.kyori:adventure-text-minimessage:4.21.0")

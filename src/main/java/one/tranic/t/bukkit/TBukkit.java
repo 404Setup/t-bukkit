@@ -1,52 +1,59 @@
 package one.tranic.t.bukkit;
 
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
-import one.tranic.t.base.TBase;
-import one.tranic.t.base.command.source.CommandSource;
+import one.tranic.t.base.TInterface;
 import one.tranic.t.base.command.source.SystemCommandSource;
 import one.tranic.t.base.player.Player;
-import one.tranic.t.base.player.Players;
 import one.tranic.t.bukkit.command.source.BukkitConsoleSource;
-import one.tranic.t.bukkit.player.BukkitPlayers;
-import one.tranic.t.utils.Reflect;
+import one.tranic.t.bukkit.player.BukkitPlayer;
+import one.tranic.t.utils.Collections;
+import one.tranic.t.utils.minecraft.Platform;
+import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.function.Function;
-import java.util.function.Supplier;
 
 @SuppressWarnings("unused")
-public class TBukkit {
-    private static boolean initialized = false;
-    private static BukkitAudiences adventure;
+public class TBukkit implements TInterface<CommandSender, org.bukkit.entity.Player> {
+    private static TBukkit instance;
+    private final Plugin plugin;
+    private final Platform[] supportedPlatforms = new Platform[]{Platform.Spigot};
+    private boolean initialized = false;
+    private BukkitAudiences adventure;
 
-    public static @NotNull BukkitAudiences adventure() {
-        if (adventure == null) {
-            throw new IllegalStateException("Tried to access Adventure when the plugin was disabled!");
-        }
-        return adventure;
+    public TBukkit(Plugin plugin) {
+        this.plugin = plugin;
+        enable();
+        instance = this;
     }
 
-    public static void init(Plugin plugin) {
+    public static TBukkit getInstance() {
+        if (instance == null) {
+            throw new IllegalStateException("Tried to access TBukkit when the plugin was disabled!");
+        }
+        return instance;
+    }
+
+    public static @NotNull BukkitAudiences adventure() {
+        if (TBukkit.getInstance().adventure == null) {
+            throw new IllegalStateException("Tried to access Adventure when the plugin was disabled!");
+        }
+        return TBukkit.getInstance().adventure;
+    }
+
+    @Override
+    public void enable() {
         if (initialized) return;
         adventure = BukkitAudiences.create(plugin);
-        try {
-            Reflect.setNotNullStaticField(TBase.class, "getConsoleSourceSupplier", (Supplier<CommandSource<?, ?>>) TBukkit::getBukkitConsoleSource);
-            Reflect.setNotNullStaticField(Players.class, "getPlayerWithStringMethod", (Function<String, Player<?>>) BukkitPlayers::getPlayer);
-            Reflect.setNotNullStaticField(Players.class, "getPlayerWithUUIDMethod", (Function<UUID, Player<?>>) BukkitPlayers::getPlayer);
-            Reflect.setNotNullStaticField(Players.class, "getOnlinePlayersMethod", (Supplier<List<Player<?>>>) BukkitPlayers::getOnlinePlayers);
-            Reflect.setNotNullStaticField(Players.class, "getPlatformOnlinePlayersMethod", (Supplier<List<?>>) BukkitPlayers::getPlatformOnlinePlayers);
-            Reflect.setNotNullStaticField(Players.class, "getOnlinePlayersNameMethod", (Supplier<List<String>>) BukkitPlayers::getOnlinePlayersName);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return;
-        }
         initialized = true;
     }
 
-    public static void disable() {
+    @Override
+    public void disable() {
         if (adventure != null) {
             adventure.close();
             adventure = null;
@@ -54,7 +61,44 @@ public class TBukkit {
         initialized = false;
     }
 
-    public static SystemCommandSource<?, ?> getBukkitConsoleSource() {
+    @Override
+    public Platform[] getSupportedPlatforms() {
+        return supportedPlatforms;
+    }
+
+    @Override
+    public SystemCommandSource<CommandSender, org.bukkit.entity.Player> getConsoleSource() {
         return new BukkitConsoleSource();
+    }
+
+    @Override
+    public @Nullable Player<org.bukkit.entity.Player> getPlayer(@NotNull String name) {
+        return BukkitPlayer.createPlayer(Bukkit.getPlayer(name));
+    }
+
+    @Override
+    public @Nullable Player<org.bukkit.entity.Player> getPlayer(@NotNull UUID uuid) {
+        return BukkitPlayer.createPlayer(Bukkit.getPlayer(uuid));
+    }
+
+    @Override
+    public @NotNull List<Player<org.bukkit.entity.Player>> getOnlinePlayers() {
+        final List<Player<org.bukkit.entity.Player>> players = Collections.newArrayList();
+        for (var p : Bukkit.getOnlinePlayers())
+            players.add(BukkitPlayer.createPlayer(p));
+        return players;
+    }
+
+    @Override
+    public @NotNull List<org.bukkit.entity.Player> getPlatformOnlinePlayers() {
+        return Collections.newArrayList(Bukkit.getOnlinePlayers());
+    }
+
+    @Override
+    public @NotNull List<String> getOnlinePlayersName() {
+        final List<String> players = Collections.newArrayList();
+        for (var p : Bukkit.getOnlinePlayers())
+            players.add(p.getName());
+        return players;
     }
 }

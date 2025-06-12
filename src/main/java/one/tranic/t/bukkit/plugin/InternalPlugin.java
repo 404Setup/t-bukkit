@@ -18,6 +18,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.util.List;
 
+@SuppressWarnings("unused")
 public class InternalPlugin extends PluginBase {
     @SuppressWarnings("all")
     private final String pluginName;

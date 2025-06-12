@@ -13,15 +13,18 @@ import java.net.InetSocketAddress;
 import java.util.Locale;
 import java.util.UUID;
 
+@SuppressWarnings("unused")
 public class BukkitPlayer implements one.tranic.t.base.player.Player<Player> {
     private final Player player;
+    private final BedrockPlayer<Player> bedrockPlayer;
 
     public BukkitPlayer(Player player) {
         this.player = player;
+        this.bedrockPlayer = new BedrockPlayer<>(this);
     }
 
     public BukkitPlayer(CommandSender commandSender) {
-        this.player = (Player) commandSender;
+        this((Player) commandSender);
     }
 
     /**
@@ -61,6 +64,11 @@ public class BukkitPlayer implements one.tranic.t.base.player.Player<Player> {
     }
 
     @Override
+    public @NotNull BedrockPlayer<Player> toBedrockPlayer() {
+        return bedrockPlayer;
+    }
+
+    @Override
     public @NotNull String getUsername() {
         return player.getName();
     }
@@ -91,7 +99,7 @@ public class BukkitPlayer implements one.tranic.t.base.player.Player<Player> {
     @Override
     public long getPing() {
         if (isBedrockPlayer()) {
-            long ping = BedrockPlayer.getPing(getUniqueId());
+            long ping = bedrockPlayer.ping();
             if (ping != -1) return ping;
         }
         return player.getPing();
@@ -104,7 +112,7 @@ public class BukkitPlayer implements one.tranic.t.base.player.Player<Player> {
 
     @Override
     public @Nullable String getClientBrand() {
-        if (isBedrockPlayer()) return BedrockPlayer.getPlatform(getUniqueId());
+        if (isBedrockPlayer()) return bedrockPlayer.platform();
         return "Java Edition";
     }
 
